@@ -6,6 +6,7 @@ import { Dimensions } from 'react-native';
 export default function App() {
 
   const [operation, setOperation] = useState("")
+  const [result, setResult] = useState("")
   const [orientation, setOrientation] = useState(true)
 
   const isPortrait = () => {
@@ -29,9 +30,62 @@ export default function App() {
         break;
       case 'C':
         setOperation("")
+        setResult("")
         break;
+      case ',':
+      setOperation(operation + '.')
+      break;
       default:
         setOperation(operation + op)
+        break;
+    }
+  }
+
+  function equalAll(){
+    try{
+      setResult(eval(operation))
+    }
+    catch{
+      setResult("error")
+    }
+  }
+  
+  function equalSpecial(op){
+    switch(op){
+      case 'pow':
+        try{
+          setResult(Math.pow(eval(operation),2))
+        }
+        catch{
+          setResult("error")
+        }
+        break;
+      case 'sqrt':
+        try{
+          setResult(Math.sqrt(eval(operation)))
+        }
+        catch{
+          setResult("error")
+        }
+        break;
+      case 'sin':
+        try{
+          setResult(Math.sin(eval(operation)))
+        }
+        catch{
+          setResult("error")
+        }
+        break;
+      case 'cos':
+        try{
+          setResult(Math.cos(eval(operation)))
+        }
+        catch{
+          setResult("error")
+        }
+        break;
+      default:
+        setResult("error")
         break;
     }
   }
@@ -40,6 +94,7 @@ export default function App() {
     <View style={styles.container}>
       <View style={styles.operationView}>
         <Text style={styles.opTxt}>{operation}</Text>
+        <Text style={styles.resultTxt}>{result}</Text>
       </View>
       <View style={styles.buttons}>
         <MyButton func={goOperation} op="1" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
@@ -47,25 +102,25 @@ export default function App() {
         <MyButton func={goOperation} op="3" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="4" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="5" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
-        {orientation ? "" :<MyButton func={goOperation} op="pow" txtStyle={styles.txtBtn} style={styles.btn2}/>}
+        {orientation ? "" :<MyButton func={equalSpecial} op="pow" txtStyle={styles.txtBtn} style={styles.btn2}/>}
         <MyButton func={goOperation} op="6" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="7" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="8" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="9" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="0" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
-        {orientation ? "" :<MyButton func={goOperation} op="sqrt" txtStyle={styles.txtBtn} style={styles.btn2}/>}
+        {orientation ? "" :<MyButton func={equalSpecial} op="sqrt" txtStyle={styles.txtBtn} style={styles.btn2}/>}
         <MyButton func={goOperation} op="+" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="-" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="*" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="/" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="," txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
-        {orientation ? "" :<MyButton func={goOperation} op="sin" txtStyle={styles.txtBtn} style={styles.btn2}/>}
-        <MyButton func={goOperation} op="=" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
+        {orientation ? "" :<MyButton func={equalSpecial} op="sin" txtStyle={styles.txtBtn} style={styles.btn2}/>}
+        <MyButton func={equalAll} op="=" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="(" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op=")" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="C" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
         <MyButton func={goOperation} op="DEL" txtStyle={styles.txtBtn} style={orientation ? styles.btn : styles.btn2}/>
-        {orientation ? "" :<MyButton func={goOperation} op="cos" txtStyle={styles.txtBtn} style={styles.btn2}/>}
+        {orientation ? "" :<MyButton func={equalSpecial} op="cos" txtStyle={styles.txtBtn} style={styles.btn2}/>}
       </View>
   </View>
   );
@@ -116,7 +171,15 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: 'right',
     width: '100%',
-    fontSize: 48,
+    fontSize: 40,
+    padding: 10
+  },
+  resultTxt: {
+    backgroundColor: "#1f1f1f",
+    color: "white",
+    textAlign: 'right',
+    width: '100%',
+    fontSize: 40,
     padding: 10
   }
 });
